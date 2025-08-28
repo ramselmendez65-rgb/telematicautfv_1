@@ -1,0 +1,1485 @@
+<!doctype html> 
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>División Académica de Telemática</title>
+  <style>
+    :root {
+      --maroon: #5a1f26;
+      --light: #f7f7f7;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      background: #fff;
+      color: #333;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* Barra lateral */
+    .sidebar {
+      width: 220px;
+      background: var(--maroon);
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 20px 0;
+      color: white;
+      transform: translateX(0);
+      transition: transform 0.5s ease;
+      z-index: 1000;
+    }
+
+    .sidebar.hidden {
+      transform: translateX(-250px);
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 20px;
+      opacity: 0;
+      animation: fadeInUp 1s forwards;
+      animation-delay: 0.5s;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar ul li {
+      padding: 12px 20px;
+      opacity: 0;
+      animation: fadeInUp 0.8s forwards;
+    }
+
+    .sidebar ul li:nth-child(1) { animation-delay: 0.6s; }
+    .sidebar ul li:nth-child(2) { animation-delay: 0.7s; }
+    .sidebar ul li:nth-child(3) { animation-delay: 0.8s; }
+    .sidebar ul li:nth-child(4) { animation-delay: 0.9s; }
+    .sidebar ul li:nth-child(5) { animation-delay: 1s; }
+    .sidebar ul li:nth-child(6) { animation-delay: 1.1s; }
+
+    .sidebar ul li a {
+      text-decoration: none;
+      color: white;
+      display: block;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar ul li a:hover {
+      background: #7a2c33;
+      border-radius: 5px;
+      transform: translateX(5px);
+    }
+
+    /* Contenido principal */
+    .main {
+      margin-left: 220px;
+      padding: 20px;
+      width: 100%;
+      transition: margin-left 0.5s ease;
+    }
+
+    .main.full {
+      margin-left: 0;
+    }
+
+    header {
+      background: linear-gradient(90deg, var(--maroon), #7a2c33);
+      color: white;
+      padding: 10px;
+      text-align: left;
+      opacity: 0;
+      animation: fadeInDown 1s forwards;
+      animation-delay: 0.3s;
+    }
+
+    header button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      transition: transform 0.5s ease;
+    }
+
+    header button.rotate {
+      transform: rotate(90deg);
+    }
+
+    .title {
+      text-align: center;
+      margin: 20px 0;
+      opacity: 0;
+      animation: fadeInUp 1s forwards;
+      animation-delay: 0.8s;
+    }
+
+    .title h1 {
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--maroon);
+    }
+
+    .title h2 {
+      font-size: 20px;
+      font-weight: normal;
+      margin-top: 5px;
+    }
+
+    .contacto {
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeInUp 1s forwards;
+      animation-delay: 1.2s;
+    }
+
+    /* Video */
+    .video-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      opacity: 0;
+      transform: scale(0.9);
+      animation: zoomIn 1s forwards;
+      animation-delay: 1.5s;
+    }
+
+    video {
+      width: 80%;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    video:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    }
+
+    /* Sección de calendario */
+    .calendario {
+      margin-top: 20px;
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.9);
+      animation: zoomIn 1s forwards;
+      animation-delay: 2s;
+    }
+
+    .calendario h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .calendario img {
+      width: 100%;
+      max-width: 800px;
+      display: block;
+      margin: auto;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .calendario img:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    }
+
+    /* Sección horarios mejorada */
+    .horarios {
+      margin: 40px auto;
+      max-width: 900px;
+      padding: 30px 25px;
+      background: linear-gradient(135deg, #f7f7f7, #fff);
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s ease;
+    }
+
+    .horarios.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .horarios h2 {
+      font-size: 26px;
+      margin-bottom: 20px;
+      border-bottom: 3px solid var(--maroon);
+      padding-bottom: 8px;
+      color: var(--maroon);
+      text-align: center;
+      animation: fadeInUp 1s forwards;
+    }
+
+    .horarios h3 {
+      font-size: 22px;
+      margin-top: 25px;
+      margin-bottom: 12px;
+      color: #5a1f26;
+      position: relative;
+      display: inline-block;
+    }
+
+    .horarios h3::after {
+      content: '';
+      display: block;
+      height: 3px;
+      width: 50%;
+      background: var(--maroon);
+      border-radius: 3px;
+      margin-top: 5px;
+      animation: expand 1s ease forwards;
+    }
+
+    .horarios ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .horarios ul li {
+      margin: 10px 0;
+      padding: 15px 20px;
+      border-radius: 12px;
+      background: #fff;
+      border-left: 5px solid var(--maroon);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.4s ease;
+      opacity: 0;
+      transform: translateX(-20px);
+      animation: fadeInRight 0.6s forwards;
+    }
+
+    .horarios ul li:nth-child(1) { animation-delay: 0.2s; }
+    .horarios ul li:nth-child(2) { animation-delay: 0.4s; }
+    .horarios ul li:nth-child(3) { animation-delay: 0.6s; }
+    .horarios ul li:nth-child(4) { animation-delay: 0.8s; }
+    .horarios ul li:nth-child(5) { animation-delay: 1s; }
+
+    .horarios ul li:hover {
+      transform: translateX(5px) scale(1.03);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      background: #fff0f0;
+    }
+
+    /* Animaciones */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fadeInRight {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes expand {
+      from { width: 0; }
+      to { width: 50%; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Barra lateral -->
+  <div class="sidebar" id="sidebar">
+    <h2>TELEMÁTICA</h2>
+    <ul>
+      <li><a href="#">Inicio</a></li>
+      <li><a href="#horarios">Horarios</a></li>
+      <li><a href="#Aulas">Aulas</a></li>
+      <li><a href="#Listas">Listas</a></li>
+      <li><a href="#Documentos">Documentos</a></li>
+      <li><a href="#MapasCurriculares">Mapa Curricular</a></li>
+    </ul>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="main" id="main">
+    <header>
+      <button id="menuBtn" onclick="toggleMenu()">☰ Mostrar Menú</button>
+    </header>
+
+    <div class="title">
+      <h1>División Académica de <b>TELEMÁTICA</b></h1>
+      <h2>Diseño, Redes y Ciencia de Datos</h2>
+    </div>
+  
+    <div class="contacto">
+      <p>Atención: dirac.telematica@utfv.edu.mx</p>
+      <p>Tel: 55-364-09-503 Ext: 255 Whats: 56-32-17-99-52</p>
+    </div>
+   <!-- Buscador -->
+<div style="text-align:center; margin: 20px 0;">
+  <input type="text" id="searchInput" placeholder="Buscar..." 
+         style="padding:10px 15px; width:70%; max-width:400px; border-radius:5px; border:1px solid #ccc; font-size:16px;">
+  <button id="clearButton" 
+          style="padding:10px 15px; margin-left:10px; border-radius:5px; border:none; background:#5a1f26; color:white; font-size:16px; cursor:pointer;">
+    Borrar
+  </button>
+</div>
+
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const clearButton = document.getElementById('clearButton');
+
+  function filterSections() {
+    const filter = searchInput.value.toLowerCase();
+    const sections = document.querySelectorAll('.horarios, .Listas, .Documentos, .MapasCurriculares, .Aulas');
+
+    sections.forEach(section => {
+      const text = section.textContent.toLowerCase();
+      section.style.display = text.includes(filter) ? 'block' : 'none';
+    });
+  }
+
+  // Evento para escribir en el buscador
+  searchInput.addEventListener('input', filterSections);
+
+  // Evento para limpiar el buscador
+  clearButton.addEventListener('click', () => {
+    searchInput.value = '';
+    filterSections(); // Muestra todas las secciones otra vez
+  });
+</script>
+
+
+    <div class="video-container">
+      <video controls autoplay muted loop>
+        <source src="file:///D:/RAMSEL%20M/telematica/serDragon.mp4" type="video/mp4">
+        Tu navegador no soporta video.
+      </video>
+    </div>
+
+    <div class="calendario">
+      <h3>Calendario Escolar 2025-2026</h3>
+      <img src="file:///D:/RAMSEL%20M/telematica/calendario.jpg" alt="Calendario Escolar">
+    </div>
+
+    <!-- Sección de horarios -->
+    <div class="horarios" id="horarios">
+      <h2>Horarios de Grupo 2025-2</h2>
+
+      <h3>Ciencia de Datos</h3>
+      <ul>
+        <li><h3>Descargar Horario CD301</h3>
+<ul>
+  <li><a href="file:///D:/RAMSEL%20M/telematica/CD301.pdf" download>
+    <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+      Descargar PDF CD301
+    </button>
+  </a></li>
+</ul>
+
+      </ul>
+
+      <h3>Infraestructura de Redes Digitales</h3>
+      <ul>
+  <li>IRD301
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/IRD301.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF IRD301
+        </button>
+      </a></li>
+    </ul>
+  </li>
+
+  <li>IRD302
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/IRD302.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF IRD302
+        </button>
+      </a></li>
+    </ul>
+  </li>
+</ul>
+
+
+      <h3>Ingeniería en Redes Inteligentes y Ciberseguridad</h3>
+      <ul>
+  <li>IRICE801 (Ejecutiva)
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/IRICE801.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF IRICE801 (Ejecutiva)
+        </button>
+      </a></li>
+    </ul>
+  </li>
+
+  <li>IRICE901 (Ejecutiva)
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/IRICE901.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF IRICE901 (Ejecutiva)
+        </button>
+      </a></li>
+    </ul>
+  </li>
+
+  <li>IRICE902 (Ejecutiva)
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/IRICE902.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF IRICE902 (Ejecutiva)
+        </button>
+      </a></li>
+    </ul>
+  </li>
+</ul>
+
+      <h3>Diseño y Animación Digital</h3>
+      <ul>
+    <ul>
+  <li>DAD201
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD201.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD201
+        </button>
+      </a></li>
+    </ul>
+  </li>
+
+  <li>DAD301
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD301.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD301
+        </button>
+      </a></li>
+    </ul>
+  </li>
+
+  <li>DAD302
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD302.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD302
+        </button>
+      </a></li>
+    </ul>
+  </li>
+
+  <li>DAD303
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD303.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD303
+        </button>
+      </a></li>
+    </ul>
+  </li>
+
+  <li>DAD305
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD305.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD305
+        </button>
+      </a></li>
+    </ul>
+  </li>
+
+  <li>DAD306
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD306.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD306
+        </button>
+      </a></li>
+    </ul>
+  </li>
+
+  <li>DAD307
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD307.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD307
+        </button>
+      </a></li>
+    </ul>
+  </li>
+
+  <li>DAD308
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD308.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD308
+        </button>
+      </a></li>
+    </ul>
+  </li>
+
+  <li>DAD309
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD309.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD309
+        </button>
+      </a></li>
+    </ul>
+  </li>
+</ul>
+
+    </div>
+    
+  <!-- Sección de Aulas -->
+<div class="Aulas" id="Aulas">
+  <h2>Horario de Aulas y Laboratorios 2025-2</h2>
+
+  <h3>Edificio M Aulas</h3>
+  <ul>
+    <li>M101
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M101.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M101
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M103
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M103.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M103
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M104
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M104.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M104
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M201
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M201.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M201
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M205
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M205.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M205
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M206
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M206.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M206
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M207
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M207.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M207
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M208
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M208.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M208
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M209
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M209.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M209
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M210
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M210.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M210
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M211
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M211.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M211
+          </button>
+        </a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>Edificio M Laboratorios</h3>
+  <ul>
+    <li>M102 (LABORATORIO PC)
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M102.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M102
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M106 (LABORATORIO PC)
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M106.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M106
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M107 (LABORATORIO PC)
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M107.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M107
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M108 (LABORATORIO PC)
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M108.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M108
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M202 (LABORATORIO MAC)
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M202.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M202
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M203 (LABORATORIO PC)
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M203.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M203
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M204 (LABORATORIO MAC)
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M204.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M204
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>LAB. INFORMATICA BASICA (PC)
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/LAB. INFORMATICA BASICA (PC).pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF LAB. INFORMATICA BASICA (PC)
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>M208 (LABORATORIO MAC)
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/M208.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF M208
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>BITMAP (LABORATORIO MAC)
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/BITMAP.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF BITMAP
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>LABORATORIO DISEÑO (PC)
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/LABORATORIO DISEÑO (PC).pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF LABORATORIO DISEÑO (PC)
+          </button>
+        </a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>Edificio L Aulas</h3>
+  <ul>
+    <li>L102
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/L102.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF L102
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>L105
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/L105.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF L105
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>L106
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/L106.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF L106
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>CCAI MAC
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/CCAI MAC.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF CCAI MAC
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>CCAI PC
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/CCAI PC.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar PDF CCAI PC
+          </button>
+        </a></li>
+      </ul>
+    </li>
+  </ul>
+
+</div>
+
+<div class="Listas" id="Listas">
+  <!-- Mensaje Importante -->
+  <div style="background:#fff3f3; border-left:5px solid #e53935; padding:15px 20px; border-radius:10px; margin-bottom:25px; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+    <h3 style="color:#e53935; margin-bottom:10px;">¡Importante!</h3>
+    <p style="color:#5a1f26; font-size:16px; margin:0;">
+      Si tu nombre NO aparece en listas favor de pasar a dirección con gusto te atenderemos.
+    </p>
+  </div>
+
+  <h2>Listas de Grupo 2025-2</h2>
+
+  <!-- Ciencia de Datos -->
+  <h3>Ciencia de Datos</h3>
+  <p><em>Actualización 27/04/2025 08:03 p.m.</em></p>
+  <ul>
+    <li>CD301</li>
+  </ul>
+
+  <!-- Infraestructura de Redes Digitales e IRICE -->
+  <h3>Infraestructura de Redes Digitales e Ingeniería en Redes Inteligentes y Ciberseguridad</h3>
+  <p><em>Actualización 27/04/2025 08:01 p.m.</em></p>
+  <ul>
+  <li>IRD301
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/IRD301.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF IRD301
+        </button>
+      </a></li>
+    </ul>
+  </li>
+     <li>IRD302
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/IRD302.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF IRD302
+        </button>
+      </a></li>
+    </ul>
+    <li>IRICE801 (EJECUTIVA)
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/IRICE801.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF IRICE801
+        </button>
+      </a></li>
+    </ul>
+  </li>
+     <li>IRICE901 (EJECUTIVA)
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/IRICE901.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF IRICE901
+        </button>
+      </a></li>
+    </ul>
+  </li>
+    <li>IRICE902 (EJECUTIVA)
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/IRICE902.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF IRICE902
+        </button>
+      </a></li>
+    </ul>
+  </li>
+
+  <!-- Diseño y Animación Digital -->
+  <h3>Diseño y Animación Digital</h3>
+  <p><em>Actualización 19/12/2024 10:12 p.m.</em></p>
+  <ul>
+    <li>DAD201
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD201.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD201
+        </button>
+      </a></li>
+    </ul>
+  </li>
+     <li>DAD301
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD301.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD301
+        </button>
+      </a></li>
+    </ul>
+  </li>
+    <li>DAD302
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD302.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD302
+        </button>
+      </a></li>
+    </ul>
+  </li>
+    <ul>
+  <li>DAD303
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD303.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD303
+        </button>
+      </a></li>
+    </ul>
+  </li>
+  <li>DAD304
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD304.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD304
+        </button>
+      </a></li>
+    </ul>
+  </li>
+  <li>DAD305 (Vespertino)
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD305.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD305
+        </button>
+      </a></li>
+    </ul>
+  </li>
+  <li>DAD306 (Vespertino)
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD306.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD306
+        </button>
+      </a></li>
+    </ul>
+  </li>
+  <li>DAD307 (Vespertino)
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD307.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD307
+        </button>
+      </a></li>
+    </ul>
+  </li>
+  <li>DAD308 (Vespertino)
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD308.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD308
+        </button>
+      </a></li>
+    </ul>
+  </li>
+  <li>DAD309 (Vespertino)
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/DAD309.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD309
+        </button>
+      </a></li>
+    </ul>
+  </li>
+</ul>
+
+
+  <!-- Diseño Digital área Animación y Licenciatura en Diseño Digital y Producción Audiovisual -->
+  <h3>Diseño Digital área Animación y Licenciatura en Diseño Digital y Producción Audiovisual</h3>
+  <p><em>Actualización 27/04/2025 08:01 p.m.</em></p>
+  <ul>
+    <li>DDA401</li>
+    <li>DDA501</li>
+    <li>LDDPA701</li>
+    <li>LDDPA801</li>
+    <li>LDDPA802</li>
+    <li>LDDPA901</li>
+    <li>LDDPA902</li>
+    <li>LDDPA903</li>
+    <li>LDDPAE904 (EJECUTIVA)</li>
+    <li>LDDPA1001</li>
+  </ul>
+</div>
+
+
+<div class="Documentos" id="Documentos">
+<h2>Documentos</h2>
+  <p><em>Actualización de los Programas Educativos por Competencias Profesionales de la Coordinación General de Universidades Tecnológicas y Politécnicas.</em></p>
+  <ul>
+    <li>DOC-20201123-WA0048.pdf
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/DOC-20201123-WA0048.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar DOC-20201123-WA0048
+          </button>
+        </a></li>
+      </ul>
+    </li>
+    <li>Dictamen_de_Acreditación_de_Carreras.pdf
+      <ul>
+        <li><a href="file:///D:/RAMSEL%20M/telematica/dictamen.pdf" download>
+          <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+            Descargar Dictamen
+          </button>
+        </a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<!-- Apartado Mapas Curriculares -->
+<div class="MapasCurriculares" id="MapasCurriculares">
+  <h2>Mapas Curriculares</h2>
+  <p><em>Actualización 24/02/2025 09:29 p.m.</em></p>
+  
+  <h3>Programa: Ciencia de Datos</h3>
+ 
+<ul>
+  <li>CD
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/CD.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF Ciencia de Datos
+        </button>
+      </a></li>
+    </ul>
+  </li>
+  
+  <h3>Programa: Infraestructura de Redes Digitales</h3>
+<ul>
+  <li>IRD
+    <ul>
+      <li><a href="file:///D:/RAMSEL%20M/telematica/IRD.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF IRD
+        </button>
+      </a></li>
+    </ul>
+  </li>
+  <h3>Programa: Diseño y Animación Digital</h3>
+<li>DAD
+  <ul>
+    <li>
+      <a href="file:///D:/RAMSEL%20M/telematica/DAD.pdf" download>
+        <button style="padding:10px 15px; background:var(--maroon); color:white; border:none; border-radius:5px; cursor:pointer;">
+          Descargar PDF DAD
+        </button>
+      </a>
+    </li>
+  </ul>
+</li>
+</div>
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+
+
+<style>
+  /* Diseño específico para Mapas Curriculares */
+  #MapasCurriculares {
+    margin: 40px auto;
+    max-width: 900px;
+    padding: 30px 25px;
+    background: linear-gradient(135deg, #f0f0f0, #ffffff);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease;
+  }
+
+  #MapasCurriculares.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #MapasCurriculares h2 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    border-bottom: 3px solid var(--maroon);
+    padding-bottom: 8px;
+    color: var(--maroon);
+    text-align: center;
+    animation: fadeInUp 1s forwards;
+  }
+
+  #MapasCurriculares p {
+    font-size: 16px;
+    color: #5a1f26;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  #MapasCurriculares h3 {
+    font-size: 22px;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    color: #5a1f26;
+    position: relative;
+    display: inline-block;
+  }
+
+  #MapasCurriculares h3::after {
+    content: '';
+    display: block;
+    height: 3px;
+    width: 50%;
+    background: var(--maroon);
+    border-radius: 3px;
+    margin-top: 5px;
+  }
+
+  #MapasCurriculares ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  #MapasCurriculares ul li {
+    margin: 10px 0;
+    padding: 15px 20px;
+    border-radius: 12px;
+    background: #fff;
+    border-left: 5px solid var(--maroon);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: all 0.4s ease;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fadeInRight 0.6s forwards;
+  }
+
+  #MapasCurriculares ul li:hover {
+    transform: translateX(5px) scale(1.03);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    background: #fff0f0;
+  }
+
+  /* Animaciones compartidas */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+</style>
+
+<script>
+  // Animación al hacer scroll en Mapas Curriculares
+  window.addEventListener("scroll", function() {
+    const mapas = document.getElementById("MapasCurriculares");
+    const position = mapas.getBoundingClientRect().top;
+    const screen = window.innerHeight;
+    if (position < screen - 100) {
+      mapas.classList.add("visible");
+    }
+  });
+</script>
+
+
+<style>
+  /* Diseño específico para la sección Documentos */
+  #Documentos {
+    margin: 40px auto;
+    max-width: 900px;
+    padding: 30px 25px;
+    background: linear-gradient(135deg, #f0f0f0, #ffffff);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease;
+  }
+
+  #Documentos.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #Documentos h2 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    border-bottom: 3px solid var(--maroon);
+    padding-bottom: 8px;
+    color: var(--maroon);
+    text-align: center;
+    animation: fadeInUp 1s forwards;
+  }
+
+  #Documentos p {
+    font-size: 16px;
+    color: #5a1f26;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  #Documentos ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  #Documentos ul li {
+    margin: 10px 0;
+    padding: 15px 20px;
+    border-radius: 12px;
+    background: #fff;
+    border-left: 5px solid var(--maroon);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: all 0.4s ease;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fadeInRight 0.6s forwards;
+  }
+
+  #Documentos ul li:hover {
+    transform: translateX(5px) scale(1.03);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    background: #fff0f0;
+  }
+
+  #Documentos ul li ul li button {
+    margin-top: 8px;
+  }
+
+  /* Animaciones compartidas */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+</style>
+
+<script>
+  // Animación al hacer scroll en la sección de Documentos
+  window.addEventListener("scroll", function() {
+    const documentos = document.getElementById("Documentos");
+    const position = documentos.getBoundingClientRect().top;
+    const screen = window.innerHeight;
+    if (position < screen - 100) {
+      documentos.classList.add("visible");
+    }
+  });
+</script>
+
+
+
+
+<style>
+  /* Animaciones y estilo para Listas */
+  #Listas h2 {
+    font-size:26px;
+    margin-bottom:20px;
+    border-bottom:3px solid #5a1f26;
+    padding-bottom:8px;
+    color:#5a1f26;
+    text-align:center;
+    animation: fadeInUp 1s forwards;
+  }
+
+  #Listas h3 {
+    font-size:22px;
+    margin-top:25px;
+    margin-bottom:12px;
+    color:#5a1f26;
+    position:relative;
+    display:inline-block;
+  }
+
+  #Listas h3::after {
+    content:'';
+    display:block;
+    height:3px;
+    width:50%;
+    background:#5a1f26;
+    border-radius:3px;
+    margin-top:5px;
+    animation: expand 1s ease forwards;
+  }
+
+  #Listas ul {
+    list-style:none;
+    padding-left:0;
+  }
+
+  #Listas ul li {
+    margin:10px 0;
+    padding:15px 20px;
+    border-radius:12px;
+    background:#fff;
+    border-left:5px solid #5a1f26;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+    transition: all 0.4s ease;
+    opacity:0;
+    transform:translateX(-20px);
+    animation: fadeInRight 0.6s forwards;
+  }
+
+  #Listas ul li:hover {
+    transform:translateX(5px) scale(1.03);
+    box-shadow:0 6px 16px rgba(0,0,0,0.15);
+    background:#fff0f0;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity:0; transform:translateY(20px);}
+    to { opacity:1; transform:translateY(0);}
+  }
+
+  @keyframes fadeInRight {
+    from { opacity:0; transform:translateX(-20px);}
+    to { opacity:1; transform:translateX(0);}
+  }
+
+  @keyframes expand {
+    from { width:0;}
+    to { width:50%;}
+  }
+</style>
+
+<script>
+  // Animación al hacer scroll en Listas
+  window.addEventListener("scroll", function(){
+    const listas = document.getElementById("Listas");
+    const position = listas.getBoundingClientRect().top;
+    const screen = window.innerHeight;
+    if(position < screen - 100){
+      listas.style.opacity = 1;
+      listas.style.transform = "translateY(0)";
+    }
+  });
+</script>
+
+
+
+
+
+
+
+
+<style>
+  /* Diseño específico para la sección Aulas */
+  #Aulas {
+    margin: 40px auto;
+    max-width: 900px;
+    padding: 30px 25px;
+    background: linear-gradient(135deg, #f0f0f0, #fff);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease;
+  }
+
+  #Aulas.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #Aulas h2 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    border-bottom: 3px solid var(--maroon);
+    padding-bottom: 8px;
+    color: var(--maroon);
+    text-align: center;
+    animation: fadeInUp 1s forwards;
+  }
+
+  #Aulas h3 {
+    font-size: 22px;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    color: #5a1f26;
+    position: relative;
+    display: inline-block;
+  }
+
+  #Aulas h3::after {
+    content: '';
+    display: block;
+    height: 3px;
+    width: 50%;
+    background: var(--maroon);
+    border-radius: 3px;
+    margin-top: 5px;
+    animation: expand 1s ease forwards;
+  }
+
+  #Aulas ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  #Aulas ul li {
+    margin: 10px 0;
+    padding: 15px 20px;
+    border-radius: 12px;
+    background: #fff;
+    border-left: 5px solid var(--maroon);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: all 0.4s ease;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fadeInRight 0.6s forwards;
+  }
+
+  #Aulas ul li:hover {
+    transform: translateX(5px) scale(1.03);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    background: #fff0f0;
+  }
+
+  /* Animaciones compartidas */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes expand {
+    from { width: 0; }
+    to { width: 50%; }
+  }
+</style>
+
+<script>
+  // Animación al hacer scroll en la sección de Aulas
+  window.addEventListener("scroll", function() {
+    const aulas = document.getElementById("Aulas");
+    const position = aulas.getBoundingClientRect().top;
+    const screen = window.innerHeight;
+    if (position < screen - 100) {
+      aulas.classList.add("visible");
+    }
+  });
+</script>
+
+    
+    
+  <script>
+    function toggleMenu() {
+      document.getElementById("sidebar").classList.toggle("hidden");
+      document.getElementById("main").classList.toggle("full");
+      document.getElementById("menuBtn").classList.toggle("rotate");
+    }
+
+    // Animación al hacer scroll en la sección de horarios
+    window.addEventListener("scroll", function() {
+      const horarios = document.getElementById("horarios");
+      const position = horarios.getBoundingClientRect().top;
+      const screen = window.innerHeight;
+      if (position < screen - 100) {
+        horarios.classList.add("visible");
+      }
+    });
+  </script>
+
+ 
+
+  
+
+
+</body>
+</html> 
